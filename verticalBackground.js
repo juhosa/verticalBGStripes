@@ -1,33 +1,57 @@
-function vertBack(colors, stripeCount) {
+function vertBack(colors, widthMin, widthMax) {
 	this.colors = colors;
-	this.stripeCount = stripeCount;
+	this.wMin = widthMin;
+	this.wMax = widthMax;                   
 	
 	this.create = function() {
-		console.log(".create start");
+		//console.log(".create start");
 		var body = $('body');
-		body.prepend("<div id='vertback' style='height:100%; width:100%'></div>");
+		body.prepend("<div id='vertback' style='height:100%; width:100%; position:absolute; '></div>");
 		var vBack = $('#vertback');
-		for(var i = 0; i < this.stripeCount; i++) {
-			this.addElement(vBack);
+		var docW = $(document).width();
+		var tmpW = 0;
+		var tmp = 0;
+
+		while(tmpW <= docW) {
+			tmp = this.pickWidth();
+		
+			if((tmpW + tmp) > docW) {
+				tmp = docW - tmpW;
+			}
+		
+			tmpW += tmp;
+			this.addElement(vBack, tmp);
+			
+			if(tmpW == docW) {
+				break;
+			}
 		}
-		console.log(".create end");
+		//vBack.append("<div style='clear:both;'></div>");
+		//console.log(".create end");
 	};
 	
-	this.addElement = function(elem) {
-		console.log(".addElement start");
+	this.addElement = function(elem, width) {
+		//console.log(".addElement start");
 		var color = this.pickColor();
-		var width = 20;
+		//var width = this.pickWidth();
 		var styleStr = "style='width:" + width + "px; height:100%; background-color:" + color + ";float:left;'";
 		var str = "<div " + styleStr +  ">";
 		elem.append(str);
-		console.log(".addElement end");
+		//return width;
+		//console.log(".addElement end");
 	};
 	
 	this.pickColor = function() {
-		console.log(".pickColor start");
+		//console.log(".pickColor start");
 		var rand = Math.floor(Math.random() * this.colors.length);
 		var ret = this.colors[rand];
-		console.log(".pickColor end rand: " + rand + " color: " + ret);
+		//console.log(".pickColor end rand: " + rand + " color: " + ret);
 		return ret;
 	};
+	
+	this.pickWidth = function() {
+		var rand = Math.floor(Math.random()*this.wMax) + this.wMin;
+		//console.log("rand width: " + rand);
+		return rand;
+	}
 }
